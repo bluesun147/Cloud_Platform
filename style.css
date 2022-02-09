@@ -1,0 +1,124 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+section {
+     
+    /* 별도 지정 안하면 기본값인 static 적용(원래 있어야 할 위치).
+    relative(상대적)로 설정하면 요소를 원래 위치에서 벗어나게 배치 가능. */
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* viewport height. 실행중 스크린 크기에 맞춰 상대적으로 크기 반환 
+    100vh, 100vw가 전체 화면 기준. 현재 스크린 height가 1000px라면 50vh는 500px */
+    min-height: 5vh; 
+    /* 블록에서 넘치는 부분은 숨김. vidible은 블록 밖에서 존재, scroll은 스크롤 가능 */
+    overflow: hidden;
+}
+
+section .text {
+    position: relative;
+    text-align: center;
+    color: #111;
+    margin: 40px;
+    max-width: 800px;
+    /* 텍스트 선택(드래그) x.  */
+    user-select: none;
+    font-size: 3em;
+    font-weight: bolder;
+    font-style: italic;
+}
+
+section .text span {
+    position: relative;
+    display: inline-block;
+    /* 커서 모양을 포인터로  */
+    cursor: pointer;
+}
+
+section .text span.active {
+    /* css 애니메이션 속성 */
+    /* 이름 지정되면 해당 이름 키 프레임 사용 됨 */
+    animation-name: mySmoke;
+    /* 애니메이션 지속 시간. 이름과 함께 필수 속성 */
+    animation-duration: 2s;
+    /* 애니메이션 속도 곡선 지정. */
+    animation-timing-function: linear;
+    
+    /* none: 애니메이션 스타일은 기본 스타일에 영향 미치지 않음.
+    요소는 애니메이션 시작 전에 기본 스타일로 설정되고 애니메이션 끝난 후 기본 스타일로 돌아감.
+    애니메이션 스타일은 @keyframes{} 안에 지정된 스타일.
+    따라서 none은 연기 애니메이션 끝나면 글자 다시 생김.
+    forwards: 애니메이션 키프레임이 100%에 도달했을 때 마지막 키 프레임 유지. 즉 사라진 채 유지 */
+    animation-fill-mode: forwards;
+    /*transform에 대한 원정 지정.*/
+    transform-origin: bottom;
+
+    /*animation: mySmoke 2s linear forwards;*/
+}
+
+@keyframes mySmoke
+{
+    0%
+    {/* transform: matrix(1,2,3,4,5,6); 
+        matrix 는 다른 Transform 함수들의 기초가 되는 함수. but 직관적이지 않음.
+                              1 3 5
+        matrix[1,2,3,4,5,6] = 2 4 6
+                              0 0 1
+        ---------------------------
+                              a 0 0
+        scale(a) =            0 a 0
+                              0 0 1
+        ---------------------------
+                              x 0 0
+        scaleX(x) =           0 1 0
+                              0 0 1
+        ---------------------------
+                              1 0 0
+        scaleY(y) =           0 y 0
+                              0 0 1
+        ---------------------------
+                              1 0 0
+        translateY(y) =       0 1 y
+                              0 0 1
+        ---------------------------
+                              1 0 x
+        translateX(x) =       0 1 0
+                              0 0 1
+        ---------------------------
+                              1 0 x
+        translate(x,y) =      0 1 y
+                              0 0 1
+
+        즉 transform: matrix(2,0,0,2,0,0)과 transform: scale(2)는 같은 모습
+         */
+        opacity: 1;
+        filter: blur(0);
+        /* translate(tx, ty) : 좌표평면에서 2D이동(translation) 함수
+        translateX(tx) : 요소를 X축 따라 tx만큼 이동
+        translateY(ty) : 요소를 Y축 따라 ty만큼 이동 */
+        transform: translateX(0) translateY(0)
+        /* 요소를 자신의 원점 또는 transform-origin 기준으로 설정한 각도만큼 시계방향 회전 */
+        rotate(0deg)
+        /* scale(sx, sy) : 2D 크기 변환 함수. sy 없다면 sx와 동일값으로 간주
+        scaleX(sx) : scale(sx, 1)과 같은 모습
+        scaleY(sy) : scale(1, sy)과 같은 모습 */
+        scale(1);
+    }
+    50%
+    {
+        opacity: 1;
+        /* html 요소에 정의된 클릭, 상태(hover, active등), 커서 옵션 비활성화*/
+        pointer-events: none;
+    }
+    100%
+    {
+        opacity: 0;
+        filter: blur(8px);
+        transform: translateX(300px) translateY(-300px) rotate(720deg) 
+        scale(4);
+    }
+}

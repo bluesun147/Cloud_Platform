@@ -1,4 +1,5 @@
 // game engine
+// https://www.youtube.com/watch?v=fx40inJ6Xf4
 const Game = (function() { // imm invoke func
     // once u declare it'll be executed at the same time
     const KEY_MAP = Object.freeze({ // 객체 동결. 변경 못하고 전달된 동일 객체 반환
@@ -8,6 +9,8 @@ const Game = (function() { // imm invoke func
     });
 
     const clouds = [];
+    const particles = [];
+    const colors = [];
 
     let canvas = null;
     let context = null;
@@ -17,6 +20,30 @@ const Game = (function() { // imm invoke func
     let canJump = false;
     let gravity = 0.7;
     let maxYvel = 15;
+
+    const random = (min, max) => Math.random() * (max - min) + min;
+
+    // #000000(흰색) ~ #999999(회색) ~ #ffffff(검정, 16진수)
+    for (let i=0; i<=9; i++) {
+        colors.push('#' + ""+i+i+i+i+i+i);
+    }
+
+    // 연기 particles 생성
+    const createParticles = function(n) {
+        const size = random(10, 15);
+        for (let i=0; i<n; i++) {
+            particles.push({
+                x: 0,
+                y: 0,
+                w: size,
+                h: size, // 정사각형 particle
+                alpha: 1, // opacity. 1일때 불투명, 0일때 투명
+                alphaDec: random(0.01, 0.07), // opacity decrease
+                speed: -1 * random(1, 5), // 연기 위로 올라가기에 음수
+                color: colors[parseInt(random(0, colors.length))]
+            })
+        }
+    };
 
     function Cloud(x, y, w, h, color) { // using function as class
         this.x = x;
@@ -38,12 +65,16 @@ const Game = (function() { // imm invoke func
     };
 
     // hero 이미지 없을 때 대체됨.
-    const renderQuad = function(x, y, w, h, color) {
+    // cloud, particle 생성시에도 쓰임. quad 만들때마다 쓰임
+    const renderQuad = function(x, y, w, h, color, alpha = 1, withStroke = true) {
         context.beginPath();
         context.fillStyle = color; // 도형 채우는 색
-        context.strokeStyle = "#888"; // 윤곽선 색
-        context.lineWidth = 8; // 선 두꼐
-        context.strokeRect(x, y, w, h); // 테두리만 있는 rect
+        context.strokeStyle = "#333"; // 윤곽선 색
+        context.lineWidth = 5; // 선 두께
+        context.globalAlpha = alpha; // opacity
+        if (withStroke) { // particle만 테두리 없음. 다른 quad(cloud)는 있음
+            context.strokeRect(x, y, w, h); // 테두리만 있는 rect
+        }
         context.fillRect(x, y, w, h); // 색 체워진 rect
         context.closePath();
     };
@@ -86,6 +117,10 @@ const Game = (function() { // imm invoke func
         } else { // 이미지 없으면 simple rect 생성
             renderQuad(hero.x, hero.y, hero.w, hero.h, hero.color);
         }
+
+        particles.forEach(p => {
+            renderQuad(p.x, p.y, p.w, p.h, p.color, p.alpha, false);
+        });
     };
 
     const update = function() {
@@ -130,7 +165,20 @@ const Game = (function() { // imm invoke func
                 hero.vel.y = 0;
                 canJump = true;
             }
-        })
+        });
+
+        particles.forEach(p => {
+            p.y += p.speed;
+            p.alpha -= p.alphaDec;
+
+            if (p.alpha < 0) {
+                p.alpha = 1;
+                p.alphaDec = random(0.02, 0.05);
+                p.x = random(hero.x, (hero.x + hero.w) - p.w); // 머리너비 사이에서 랜덤으로 생성
+                p.y = hero.y - p.h; // 머리 바로 위에서 나오기 시작
+                p.speed = -random(1, 4);
+            }
+        });
     };
 
     // for every single frame in the game loop
@@ -155,7 +203,7 @@ const Game = (function() { // imm invoke func
             canvas.style.background = color;
             // put canvas in the middle of the screen
             canvas.style.marginLeft = window.innerWidth/2 - w/2 + "px";
-            canvas.style.marginTop = window.innerHeight/2 - h/2 + "px";
+            //canvas.style.marginTop = window.innerHeight/2 - h/2 + "px";
 
             document.body.appendChild(canvas);
 
@@ -191,6 +239,10 @@ const Game = (function() { // imm invoke func
         // func to start game loop
         start() {
             frame(); // private func
+        },
+
+        enableParticles: function(n) {
+            createParticles(n);
         }
     }
 })();

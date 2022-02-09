@@ -6,7 +6,29 @@
     <title>Cloud Platformer</title>
 </head>
 <body>
-    <script src = "game.js"></script>
-    <script src = "index.js"></script>
+    <section>
+        <p class = "text">
+           Cloud Platformer
+        </p>
+    </section>
+    <script>
+        // now split text into letters
+        const text = document.querySelector('.text'); // 클래스 이름이 text 선택
+        // 문자열을 알파벳 하나씩 분리. 정규표현식
+        // 모든 문자 하나하나를 <span>$&</span>로 치환
+        // $& 패턴은 앞에서 대응된(일치한) 전체 문자열 가리킴
+        text.innerHTML = text.textContent.replace(/\S/g, "<span>$&</span>");
+
+        // now add active class on hovered <span> tag
+            const letters = document.querySelectorAll('span');
+        for (let i=0; i<letters.length; i++) {
+            letters[i].addEventListener('mouseover', function() { // https://www.youtube.com/watch?v=9XyowP9VjDo
+                letters[i].classList.add('active'); // onmouse하면 span에 class명이 'active'인 class 생김
+            })
+        }
+    </script>
+
+<script src = "game.js"></script>
+<script src = "index.js"></script>
 </body>
 </html>
