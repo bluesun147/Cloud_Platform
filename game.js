@@ -4,6 +4,7 @@ const Game = (function() { // imm invoke func
     // once u declare it'll be executed at the same time
     const KEY_MAP = Object.freeze({ // 객체 동결. 변경 못하고 전달된 동일 객체 반환
         JUMP: 32, // space
+        JUMP2: 38,
         LEFT: 37,
         RIGHT: 39,
     });
@@ -25,6 +26,7 @@ const Game = (function() { // imm invoke func
 
     // #000000(흰색) ~ #999999(회색) ~ #ffffff(검정, 16진수)
     for (let i=0; i<=9; i++) {
+        //colors.push('#' + ""+i+i+i+i+i+i);
         colors.push('#' + ""+i+i+i+i+i+i);
     }
 
@@ -84,7 +86,7 @@ const Game = (function() { // imm invoke func
             isLeft = true;
         } else if (keyCode === KEY_MAP.RIGHT) {
             isRight = true;
-        } else if (keyCode === KEY_MAP.JUMP) {
+        } else if (keyCode === KEY_MAP.JUMP || KEY_MAP.JUMP2) {
             hero.vel.y = -12;
         }
     };

@@ -12,6 +12,6 @@ Game.addCloud(200, 70, 60, 10, "pink");
 // ground cloud
 Game.addCloud(0, Game.world.h() - 15, Game.world.w(), 15, "teal");
 
-Game.enableParticles(100); // smoke particles
+Game.enableParticles(500); // smoke particles
 
 Game.start();
