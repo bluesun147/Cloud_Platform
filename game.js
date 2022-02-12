@@ -86,7 +86,7 @@ const Game = (function() { // imm invoke func
             isLeft = true;
         } else if (keyCode === KEY_MAP.RIGHT) {
             isRight = true;
-        } else if (keyCode === KEY_MAP.JUMP || KEY_MAP.JUMP2) {
+        } else if (keyCode === KEY_MAP.JUMP || keyCode === KEY_MAP.JUMP2) {
             hero.vel.y = -12;
         }
     };
@@ -133,10 +133,10 @@ const Game = (function() { // imm invoke func
         }
 
         // 바닥 닿으면 멈춤. hero.y는 머리(rect 윗부분)
-        /*if (hero.y + hero.vel.y> canvas.height - hero.h) { // 내려갈수록 y값 커짐
+        if (hero.y + hero.vel.y> canvas.height - hero.h) { // 내려갈수록 y값 커짐
             hero.y = canvas.height - hero.h;
             hero.vel.y = 0;
-        }*/
+        }
 
         hero.x += hero.vel.x;
         hero.y += hero.vel.y;

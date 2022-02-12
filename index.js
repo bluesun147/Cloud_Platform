@@ -1,7 +1,7 @@
 // consume the game.js(game engine)
 // initialize play area
 Game.init(320, 480, "#DDD"); // width, height, bg color
-Game.addHero( { x: 100, y: 200, imgSrc: "hero.png"}); // add props for addHero
+Game.addHero( { x: 200, y: 200, imgSrc: "hero.png"}); // add props for addHero
 
 Game.addCloud(200, 210, 80, 10, "cyan"); // x, y, w, h, color
 Game.addCloud(30, 380, 40, 10, "orange");
